@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image gallery</title>
+  <style>
+    * {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .gallery {
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      width: 100%;
+    }
+
+    .gallery__list {
+      background: rgba(0,0,0,0.05);
+      display: flex;
+      overflow: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .gallery__list-item {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      cursor: grab;
+    }
+    .gallery__controls {
+      display: flex;
+      overflow-x: scroll;
+      margin-top: 5px;
+      overflow: -moz-scrollbars-none;
+      -ms-overflow-style: none;
+      height: 60px;
+    }
+
+    .gallery__shadow {
+      position: absolute;
+      right: 0;
+      top: 100%;
+      height: 60px;
+      width: 20px;
+      background-color: transparent;
+      z-index: 1000;
+      margin-top: -60px;
+      margin-right: -20px;
+      box-shadow: -20px 2px 15px -4px rgba(0,0,0,0.75);
+      overflow: hidden;
+    }
+
+    .gallery__controls::-webkit-scrollbar {
+      display: none;
+    }
+
+    .gallery__controls-item {
+      display: inline;
+      margin: 0px 2.5px;
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+    .gallery__controls-item:first-child  {
+      margin-left: 0px;
+    }
+    .gallery__controls-item:last-child  {
+      margin-right: 0px;
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery">
+    <div class="gallery__list">
+      <img class="gallery__list-item" data-image-index="0" src="images/1.png" alt="Primeira Imagem">
+      <img class="gallery__list-item" data-image-index="1" src="images/2.png" alt="Segunda Imagem">
+      <img class="gallery__list-item" data-image-index="2" src="images/3.png" alt="Terceira Imagem">
+      <img class="gallery__list-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+    </div>
+    <div class="gallery__controls">
+      <img class="gallery__controls-item" data-image-index="0" src="images/1.png" alt="Primeira Imagem">
+      <img class="gallery__controls-item" data-image-index="1" src="images/2.png" alt="Segunda Imagem">
+      <img class="gallery__controls-item" data-image-index="2" src="images/3.png" alt="Terceira Imagem">
+      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+    </div>
+    <div class="gallery__shadow"></div>
+  </div>
+</body>
+
+<script>
+  document.querySelectorAll('.gallery__controls-item').forEach(function(controlItem) {
+    controlItem.addEventListener('click', function (event) {
+      const imageIndex = event.target.dataset.imageIndex
+
+      const galleryItem = document.querySelector("[data-image-index='" + imageIndex +  "']")
+
+      galleryItem.scrollIntoView({
+        behavior: "smooth"
+      })
+    })
+  })
+</script>
+</html>
