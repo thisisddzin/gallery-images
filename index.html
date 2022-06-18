@@ -149,7 +149,9 @@
       galleryList.scrollLeft = scrollWidthSum
 
       const galleryItem = document.querySelector(".gallery__list [data-image-index='" + imageIndex +  "']")
-      imageZoom(galleryItem, 'gallery-zoom')
+      if(!navigator.userAgentData.mobile) {
+        imageZoom(galleryItem, 'gallery-zoom')
+      }
     })
   })
 
