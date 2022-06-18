@@ -139,26 +139,23 @@
 </body>
 
 <script>
+  document.querySelectorAll('.gallery__controls-item').forEach(function(controlItem) {
+    controlItem.addEventListener('click', function (event) {
+      const imageIndex = event.target.dataset.imageIndex
 
-  console.log(navigator.userAgentData.mobile)
+      const galleryList = document.querySelector('.gallery__list')
+      const scrollWidthSum = galleryList.clientWidth * Number(imageIndex)
+
+      galleryList.scrollLeft = scrollWidthSum
+
+      const galleryItem = document.querySelector(".gallery__list [data-image-index='" + imageIndex +  "']")
+      imageZoom(galleryItem, 'gallery-zoom')
+    })
+  })
 
   if(!navigator.userAgentData.mobile) {
     document.querySelector('#gallery-zoom').style.display = 'block'
     imageZoom(document.querySelector(".gallery__list > img"), 'gallery-zoom')
-
-    document.querySelectorAll('.gallery__controls-item').forEach(function(controlItem) {
-      controlItem.addEventListener('click', function (event) {
-        const imageIndex = event.target.dataset.imageIndex
-
-        const galleryList = document.querySelector('.gallery__list')
-        const scrollWidthSum = galleryList.clientWidth * Number(imageIndex)
-
-        galleryList.scrollLeft = scrollWidthSum
-
-        const galleryItem = document.querySelector(".gallery__list [data-image-index='" + imageIndex +  "']")
-        imageZoom(galleryItem, 'gallery-zoom')
-      })
-    })
 
     function imageZoom(imgEl, resultID) {
       var img, lens, result, cx, cy;
