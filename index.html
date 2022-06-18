@@ -9,6 +9,7 @@
     * {
       margin: 0px;
       padding: 0px;
+      box-sizing: border-box;
     }
 
     body {
@@ -25,6 +26,7 @@
       flex-direction: column;
       position: relative;
       width: 100%;
+      overflow: hidden;
     }
 
     .gallery__list {
@@ -33,6 +35,7 @@
       overflow: auto;
       scroll-snap-type: x mandatory;
       scroll-behavior: smooth;
+      cursor: crosshair;
     }
 
     .gallery__list-item {
@@ -50,6 +53,7 @@
       overflow: -moz-scrollbars-none;
       -ms-overflow-style: none;
       height: 60px;
+      cursor: grab;
     }
 
     .gallery__shadow {
@@ -84,6 +88,29 @@
     .gallery__controls-item:last-child  {
       margin-right: 0px;
     }
+
+    .gallery__zoom {
+      width: 120px;
+      height: 120px;
+      background-color: black;
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin-top: 10px;
+      margin-right: 10px;
+      border-radius: 100%;
+      border: 1px solid #d4d4d4;
+      cursor: move;
+      display: none;
+    }
+
+    .img-zoom-lens {
+      position: absolute;
+      border: 1px solid #d4d4d4;
+      /*set the size of the lens:*/
+      width: 60px;
+      height: 60px;
+    }
   </style>
 </head>
 <body>
@@ -107,20 +134,166 @@
       <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
     </div>
     <div class="gallery__shadow"></div>
+    <div id="gallery-zoom" class="gallery__zoom"></div>
   </div>
 </body>
 
 <script>
-  document.querySelectorAll('.gallery__controls-item').forEach(function(controlItem) {
-    controlItem.addEventListener('click', function (event) {
-      const imageIndex = event.target.dataset.imageIndex
 
-      const galleryItem = document.querySelector("[data-image-index='" + imageIndex +  "']")
+  console.log(navigator.userAgentData.mobile)
 
-      galleryItem.scrollIntoView({
-        behavior: "smooth"
+  if(!navigator.userAgentData.mobile) {
+    document.querySelector('#gallery-zoom').style.display = 'block'
+    imageZoom(document.querySelector(".gallery__list > img"), 'gallery-zoom')
+
+    document.querySelectorAll('.gallery__controls-item').forEach(function(controlItem) {
+      controlItem.addEventListener('click', function (event) {
+        const imageIndex = event.target.dataset.imageIndex
+
+        const galleryList = document.querySelector('.gallery__list')
+        const scrollWidthSum = galleryList.clientWidth * Number(imageIndex)
+
+        galleryList.scrollLeft = scrollWidthSum
+
+        const galleryItem = document.querySelector(".gallery__list [data-image-index='" + imageIndex +  "']")
+        imageZoom(galleryItem, 'gallery-zoom')
       })
     })
-  })
+
+    function imageZoom(imgEl, resultID) {
+      var img, lens, result, cx, cy;
+      // img = document.querySelector(imgID);
+
+      lens = document.querySelector('.img-zoom-lens')
+      if(lens) lens.remove()
+      img = imgEl
+      result = document.getElementById(resultID);
+      /* Create lens: */
+      lens = document.createElement("DIV");
+      lens.setAttribute("class", "img-zoom-lens");
+      /* Insert lens: */
+      img.parentElement.insertBefore(lens, img);
+      /* Calculate the ratio between result DIV and lens: */
+      cx = result.offsetWidth / lens.offsetWidth;
+      cy = result.offsetHeight / lens.offsetHeight;
+      /* Set background properties for the result DIV */
+      result.style.backgroundImage = "url('" + img.src + "')";
+      result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
+
+      lens.removeEventListener("mousemove", moveLens)
+      lens.removeEventListener("touchmove", moveLens)
+      img.removeEventListener("mousemove", moveLens)
+      img.removeEventListener("touchmove", moveLens)
+
+      /* Execute a function when someone moves the cursor over the image, or the lens: */
+      lens.addEventListener("mousemove", moveLens);
+      img.addEventListener("mousemove", moveLens);
+      /* And also for touch screens: */
+      lens.addEventListener("touchmove", moveLens);
+      img.addEventListener("touchmove", moveLens);
+      function moveLens(e) {
+        var pos, x, y;
+        /* Prevent any other actions that may occur when moving over the image */
+        e.preventDefault();
+        /* Get the cursor's x and y positions: */
+        pos = getCursorPos(e);
+        /* Calculate the position of the lens: */
+        x = pos.x - (lens.offsetWidth / 2);
+        y = pos.y - (lens.offsetHeight / 2);
+        /* Prevent the lens from being positioned outside the image: */
+        if (x > img.width - lens.offsetWidth) {x = img.width - lens.offsetWidth;}
+        if (x < 0) {x = 0;}
+        if (y > img.height - lens.offsetHeight) {y = img.height - lens.offsetHeight;}
+        if (y < 0) {y = 0;}
+        /* Set the position of the lens: */
+        lens.style.left = x + "px";
+        lens.style.top = y + "px";
+        /* Display what the lens "sees": */
+        result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
+      }
+      function getCursorPos(e) {
+        var a, x = 0, y = 0;
+        e = e || window.event;
+        /* Get the x and y positions of the image: */
+        a = img.getBoundingClientRect();
+        /* Calculate the cursor's x and y coordinates, relative to the image: */
+        x = e.pageX - a.left;
+        y = e.pageY - a.top;
+        /* Consider any page scrolling: */
+        x = x - window.pageXOffset;
+        y = y - window.pageYOffset;
+        return {x : x, y : y};
+      }
+    }
+
+    dragElement();
+
+    function dragElement(elmnt) {
+      var dragItem = document.querySelector(".gallery__zoom");
+      var container = document.querySelector(".gallery");
+
+      var active = false;
+      var currentX;
+      var currentY;
+      var initialX;
+      var initialY;
+      var xOffset = 0;
+      var yOffset = 0;
+
+      container.addEventListener("touchstart", dragStart, false);
+      container.addEventListener("touchend", dragEnd, false);
+      container.addEventListener("touchmove", drag, false);
+
+      container.addEventListener("mousedown", dragStart, false);
+      container.addEventListener("mouseup", dragEnd, false);
+      container.addEventListener("mousemove", drag, false);
+
+      function dragStart(e) {
+        if (e.type === "touchstart") {
+          initialX = e.touches[0].clientX - xOffset;
+          initialY = e.touches[0].clientY - yOffset;
+        } else {
+          initialX = e.clientX - xOffset;
+          initialY = e.clientY - yOffset;
+        }
+
+        if (e.target === dragItem) {
+          active = true;
+        }
+      }
+
+      function dragEnd(e) {
+        initialX = currentX;
+        initialY = currentY;
+
+        active = false;
+      }
+
+      function drag(e) {
+        if (active) {
+        
+          e.preventDefault();
+        
+          if (e.type === "touchmove") {
+            currentX = e.touches[0].clientX - initialX;
+            currentY = e.touches[0].clientY - initialY;
+          } else {
+            currentX = e.clientX - initialX;
+            currentY = e.clientY - initialY;
+          }
+
+          xOffset = currentX;
+          yOffset = currentY;
+
+          setTranslate(currentX, currentY, dragItem);
+        }
+      }
+
+      function setTranslate(xPos, yPos, el) {
+        el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
+      }
+    }
+  }
+
 </script>
 </html>
