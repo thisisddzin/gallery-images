@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image gallery</title>
+  <title>Gallery Image Viewer Lens</title>
   <style>
     * {
       margin: 0px;
@@ -20,7 +20,7 @@
       width: 100%;
     }
 
-    .gallery {
+    .ddzin-giv {
       max-width: 500px;
       display: flex;
       flex-direction: column;
@@ -29,7 +29,7 @@
       overflow: hidden;
     }
 
-    .gallery__list {
+    .ddzin-giv__list {
       background: rgba(0,0,0,0.05);
       display: flex;
       overflow: auto;
@@ -38,7 +38,7 @@
       cursor: crosshair;
     }
 
-    .gallery__list-item {
+    .ddzin-giv__list-item {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -46,7 +46,7 @@
       scroll-snap-align: start;
       cursor: grab;
     }
-    .gallery__controls {
+    .ddzin-giv__controls {
       display: flex;
       overflow-x: scroll;
       margin-top: 5px;
@@ -56,7 +56,7 @@
       cursor: grab;
     }
 
-    .gallery__shadow {
+    .ddzin-giv__shadow {
       position: absolute;
       right: 0;
       top: 100%;
@@ -70,11 +70,11 @@
       overflow: hidden;
     }
 
-    .gallery__controls::-webkit-scrollbar {
+    .ddzin-giv__controls::-webkit-scrollbar {
       display: none;
     }
 
-    .gallery__controls-item {
+    .ddzin-giv__controls-item {
       display: inline;
       margin: 0px 2.5px;
       width: 60px;
@@ -82,14 +82,14 @@
       object-fit: cover;
       cursor: pointer;
     }
-    .gallery__controls-item:first-child  {
+    .ddzin-giv__controls-item:first-child  {
       margin-left: 0px;
     }
-    .gallery__controls-item:last-child  {
+    .ddzin-giv__controls-item:last-child  {
       margin-right: 0px;
     }
 
-    .gallery__zoom {
+    .ddzin-giv__zoom {
       width: 120px;
       height: 120px;
       background-color: black;
@@ -114,50 +114,48 @@
   </style>
 </head>
 <body>
-  <div class="gallery">
-    <div class="gallery__list">
-      <img class="gallery__list-item" data-image-index="0" src="images/1.png" alt="Primeira Imagem">
-      <img class="gallery__list-item" data-image-index="1" src="images/2.png" alt="Segunda Imagem">
-      <img class="gallery__list-item" data-image-index="2" src="images/3.png" alt="Terceira Imagem">
-      <img class="gallery__list-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+  <div class="ddzin-giv">
+    <div class="ddzin-giv__list">
+      <img class="ddzin-giv__list-item" data-image-index="0" src="images/1.png" alt="Primeira Imagem">
+      <img class="ddzin-giv__list-item" data-image-index="1" src="images/2.png" alt="Segunda Imagem">
+      <img class="ddzin-giv__list-item" data-image-index="2" src="images/3.png" alt="Terceira Imagem">
+      <img class="ddzin-giv__list-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
     </div>
-    <div class="gallery__controls">
-      <img class="gallery__controls-item" data-image-index="0" src="images/1.png" alt="Primeira Imagem">
-      <img class="gallery__controls-item" data-image-index="1" src="images/2.png" alt="Segunda Imagem">
-      <img class="gallery__controls-item" data-image-index="2" src="images/3.png" alt="Terceira Imagem">
-      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
-      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
-      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
-      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
-      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
-      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
-      <img class="gallery__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+    <div class="ddzin-giv__controls">
+      <img class="ddzin-giv__controls-item" data-image-index="0" src="images/1.png" alt="Primeira Imagem">
+      <img class="ddzin-giv__controls-item" data-image-index="1" src="images/2.png" alt="Segunda Imagem">
+      <img class="ddzin-giv__controls-item" data-image-index="2" src="images/3.png" alt="Terceira Imagem">
+      <img class="ddzin-giv__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="ddzin-giv__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="ddzin-giv__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="ddzin-giv__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="ddzin-giv__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="ddzin-giv__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
+      <img class="ddzin-giv__controls-item" data-image-index="3" src="images/4.png" alt="Quarta Imagem">
     </div>
-    <div class="gallery__shadow"></div>
-    <div id="gallery-zoom" class="gallery__zoom"></div>
+    <div class="ddzin-giv__shadow"></div>
+    <div id="ddzin-giv-zoom" class="ddzin-giv__zoom"></div>
   </div>
 </body>
 
 <script>
-  document.querySelectorAll('.gallery__controls-item').forEach(function(controlItem) {
+  document.querySelectorAll('.ddzin-giv__controls-item').forEach(function(controlItem) {
     controlItem.addEventListener('click', function (event) {
       const imageIndex = event.target.dataset.imageIndex
 
-      const galleryList = document.querySelector('.gallery__list')
-      const scrollWidthSum = galleryList.clientWidth * Number(imageIndex)
+      const galleryItem = document.querySelector(".ddzin-giv__list [data-image-index='" + imageIndex +  "']")
+      
+      galleryItem.scrollIntoView({ behavior: "smooth" })
 
-      galleryList.scrollLeft = scrollWidthSum
-
-      const galleryItem = document.querySelector(".gallery__list [data-image-index='" + imageIndex +  "']")
       if(!navigator.userAgentData.mobile) {
-        imageZoom(galleryItem, 'gallery-zoom')
+        imageZoom(galleryItem, 'ddzin-giv-zoom')
       }
     })
   })
 
   if(!navigator.userAgentData.mobile) {
-    document.querySelector('#gallery-zoom').style.display = 'block'
-    imageZoom(document.querySelector(".gallery__list > img"), 'gallery-zoom')
+    document.querySelector('#ddzin-giv-zoom').style.display = 'block'
+    imageZoom(document.querySelector(".ddzin-giv__list > img"), 'ddzin-giv-zoom')
 
     function imageZoom(imgEl, resultID) {
       var img, lens, result, cx, cy;
@@ -228,8 +226,8 @@
     dragElement();
 
     function dragElement(elmnt) {
-      var dragItem = document.querySelector(".gallery__zoom");
-      var container = document.querySelector(".gallery");
+      var dragItem = document.querySelector(".ddzin-giv__zoom");
+      var container = document.querySelector(".ddzin-giv");
 
       var active = false;
       var currentX;
